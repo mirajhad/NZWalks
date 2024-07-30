@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NZWalks.API.Repositories
+namespace NZWalks.API.Repositories.IRepositories
 {
     public interface IRegionRepository
     {
