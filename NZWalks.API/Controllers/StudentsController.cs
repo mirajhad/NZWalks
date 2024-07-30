@@ -8,7 +8,7 @@ namespace NZWalks.API.Controllers
     public class StudentsController : ControllerBase
     {
         [HttpGet]
-        public IActionResult GetAllStudents()
+        public async Task<IActionResult> GetAllStudents()
         {
             return Ok();
         }
