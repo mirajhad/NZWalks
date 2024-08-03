@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Data;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
@@ -55,12 +56,11 @@ namespace NZWalks.API.Controllers
         // POST To Create New Region
         // POST: https://localhost:portnumber/api/regions
         [HttpPost]
-       // [ValidateModel]
+        [ValidateModel]
         //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
-            if (ModelState.IsValid)
-            {
+           
                 var regionDomainModel = _mapper.Map<Region>(addRegionRequestDto);
 
                 regionDomainModel = await _regionRepository.CreateAsync(regionDomainModel);
@@ -68,11 +68,7 @@ namespace NZWalks.API.Controllers
                 var regionDto = _mapper.Map<RegionDto>(regionDomainModel);
 
                 return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
+
            
         }
 
@@ -81,12 +77,11 @@ namespace NZWalks.API.Controllers
         // PUT: https://localhost:portnumber/api/regions/{id}
         [HttpPut]
         [Route("{id:Guid}")]
-        //[ValidateModel]
+        [ValidateModel]
         //[Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
-            if (ModelState.IsValid) 
-            {
+           
                 var regionDomainModel = _mapper.Map<Region>(updateRegionRequestDto);
 
                 regionDomainModel = await _regionRepository.UpdateAsync(id, regionDomainModel);
@@ -96,11 +91,6 @@ namespace NZWalks.API.Controllers
                 }
 
                 return Ok(_mapper.Map<RegionDto>(regionDomainModel));
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
             
         }
 
@@ -120,9 +110,6 @@ namespace NZWalks.API.Controllers
             }
 
             return Ok(_mapper.Map<RegionDto>(regionDomainModel));
-
         }
-
-
     }
 }
