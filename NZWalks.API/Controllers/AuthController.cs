@@ -45,5 +45,41 @@ namespace NZWalks.API.Controllers
 
             return BadRequest("Something went wrong");
         }
+
+
+        // POST: /api/Auth/Login
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+        {
+            var user = await _userManager.FindByEmailAsync(loginRequestDto.Username);
+
+            if (user != null)
+            {
+                var checkPasswordResult = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+
+                if (checkPasswordResult)
+                {
+                    // Get Roles for this user
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    if (roles != null)
+                    {
+                        // Create Token
+
+                        var jwtToken = tokenRepository.CreateJWTToken(user, roles.ToList());
+
+                        var response = new LoginResponseDto
+                        {
+                            JwtToken = jwtToken
+                        };
+
+                        return Ok(response);
+                    }
+                }
+            }
+
+            return BadRequest("Username or password incorrect");
+        }
     }
 }
