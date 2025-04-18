@@ -109,6 +109,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     });
 
+builder.Services.AddExceptionHandler(
+    options =>
+    {
+        options.ExceptionHandlingPath = "/error";
+        options.AllowStatusCode404Response = true;
+
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -132,6 +140,10 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/Images"
 });
 
+
+app.UseExceptionHandler("/Error"); // Redirects to an error page
+
 app.MapControllers();
 
 app.Run();
+
